@@ -56,17 +56,18 @@ public class HomeController {
                 model.addAttribute("emailExists", true);
             }
 
-            if(!Utils.isValidEmailAddress(user.getEmail())) {
-                model.addAttribute("wrongEmail", true);
-            }
-
-
             if (userService.checkUsernameExists(user.getUsername())) {
                 model.addAttribute("usernameExists", true);
             }
 
             return "signup";
-        } else {
+        } else if (!Utils.isValidEmailAddress(user.getEmail())) {
+            model.addAttribute("wrongEmail", true);
+
+            return "signup";
+        }
+
+        else {
             Set<UserRole> userRoles = new HashSet<>();
             userRoles.add(new UserRole(user, roleRepository.findByName("ROLE_USER")));
 
