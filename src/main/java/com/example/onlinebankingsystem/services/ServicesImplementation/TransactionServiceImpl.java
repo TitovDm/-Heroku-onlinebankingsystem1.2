@@ -70,35 +70,31 @@ public class TransactionServiceImpl implements TransactionService {
     }
 
     @Override
-    public void betweenAccountsTransfer(String transferFrom, String transferTo, String amount, PrimaryAccount primaryAccount, SavingsAccount savingsAccount) throws Exception {
-        if (transferFrom.equalsIgnoreCase("Primary") && transferTo.equalsIgnoreCase("Savings")) {
-            primaryAccount.setAccountBalance(primaryAccount.getAccountBalance().subtract(new BigDecimal(amount)));
-            if (primaryAccount.getAccountBalance().compareTo(new BigDecimal(amount)) < 0) {
-                return;
-            }
-            savingsAccount.setAccountBalance(savingsAccount.getAccountBalance().add(new BigDecimal(amount)));
-            primaryAccountRepository.save(primaryAccount);
-            savingsAccountRepository.save(savingsAccount);
+    public void fromPrimarytoSomeoneElseTransfer(Recipient recipient, String accountType, String amount,
+                                                 PrimaryAccount primaryAccount, SavingsAccount savingsAccount) {
+        primaryAccount.setAccountBalance(primaryAccount.getAccountBalance().subtract(new BigDecimal(amount)));
+        primaryAccountRepository.save(primaryAccount);
 
-            Date date = new Date();
+        Date date = new Date();
 
-            PrimaryTransaction primaryTransaction = new PrimaryTransaction(date, "Between account transfer from "
-                    + transferFrom + " to " + transferTo, "Account", "Finished", Double.parseDouble(amount),
-                    primaryAccount.getAccountBalance(), primaryAccount);
-            primaryTransactionRepository.save(primaryTransaction);
-        } else if (transferFrom.equalsIgnoreCase("Savings") && transferTo.equalsIgnoreCase("Primary")) {
-            primaryAccount.setAccountBalance(primaryAccount.getAccountBalance().add(new BigDecimal(amount)));
-            savingsAccount.setAccountBalance(savingsAccount.getAccountBalance().subtract(new BigDecimal(amount)));
-            primaryAccountRepository.save(primaryAccount);
-            savingsAccountRepository.save(savingsAccount);
+        PrimaryTransaction primaryTransaction = new PrimaryTransaction(date, "Transfer to recipient "+
+                recipient.getName(), "Transfer", "Finished", Double.parseDouble(amount),
+                primaryAccount.getAccountBalance(), primaryAccount);
+        primaryTransactionRepository.save(primaryTransaction);
+    }
 
-            Date date = new Date();
+    @Override
+    public void fromSavingstoSomeoneElseTransfer(Recipient recipient, String accountType, String amount,
+                                                 PrimaryAccount primaryAccount, SavingsAccount savingsAccount) {
+        savingsAccount.setAccountBalance(savingsAccount.getAccountBalance().subtract(new BigDecimal(amount)));
+        savingsAccountRepository.save(savingsAccount);
 
-            SavingsTransaction savingsTransaction = new SavingsTransaction(date, "Between account transfer from " + transferFrom + " to " + transferTo, "Transfer", "Finished", Double.parseDouble(amount), savingsAccount.getAccountBalance(), savingsAccount);
-            savingsTransactionRepository.save(savingsTransaction);
-        } else {
-            throw new Exception("Invalid Transfer");
-        }
+        Date date = new Date();
+
+        SavingsTransaction savingsTransaction = new SavingsTransaction(date, "Transfer to recipient " +
+                recipient.getName(), "Transfer", "Finished", Double.parseDouble(amount),
+                savingsAccount.getAccountBalance(), savingsAccount);
+        savingsTransactionRepository.save(savingsTransaction);
     }
 
 

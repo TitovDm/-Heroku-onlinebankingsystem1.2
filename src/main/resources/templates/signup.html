@@ -22,7 +22,7 @@
                         <div class="input-group">
                             <span class="input-group-addon"><i class="fa fa-user fa" aria-hidden="true"></i></span>
                             <input type="text" class="form-control" th:value="${user.firstName}" id="firstName"
-                                   name="firstName" roleId="firstname" placeholder="Enter your first name"
+                                   name="firstName" roleId="firstname" placeholder="Enter your First Name"
                                    required="required"/>
                         </div>
                     </div>
@@ -34,7 +34,7 @@
                         <div class="input-group">
                             <span class="input-group-addon"><i class="fa fa-user fa" aria-hidden="true"></i></span>
                             <input type="text" class="form-control" th:value="${user.lastName}" id="lastName"
-                                   name="lastName" roleId="lastName" placeholder="Enter your last name"
+                                   name="lastName" roleId="lastName" placeholder="Enter your Last Name"
                                    required="required"/>
                         </div>
                     </div>
@@ -52,10 +52,8 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="email" class="cols-sm-2 control-label">Your Email</label><span
-                        class="bg-danger pull-right" th:if="${emailExists}">Email already exists</span>
-                    <span
-                            class="bg-danger pull-right" th:if="${wrongEmail}">Email is incorrect</span>
+                    <label for="email" class="cols-sm-2 control-label">Email</label>
+
                     <div class="cols-sm-10">
                         <div class="input-group">
                             <span class="input-group-addon"><i class="fa fa-envelope fa" aria-hidden="true"></i></span>
@@ -63,6 +61,10 @@
                                    roleId="email" placeholder="Enter your Email" required="required"/>
                         </div>
                     </div>
+                    <span
+                            class="bg-danger pull-right" th:if="${wrongEmail}">Invalid email address</span>
+                    <span
+                            class="bg-danger pull-right" th:if="${emailExists}">Email already exists</span>
                 </div>
 
                 <div class="form-group">
@@ -106,7 +108,7 @@
                 <!--</div>-->
 
                 <div class="form-group ">
-                    <button type="submit" class="btn btn-primary btn-lg btn-block login-button">Sign up!</button>
+                    <button type="submit" class="btn btn-primary btn-lg btn-block login-button">Sign up</button>
                 </div>
 
                 <hr/>

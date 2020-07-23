@@ -156,12 +156,29 @@ public class TransferController {
 
     @RequestMapping(value = "/toSomeoneElse", method = RequestMethod.POST)
     public String toSomeoneElsePost (@ModelAttribute("recipientName") String recipientName, @ModelAttribute("accountType")
-            String accountType, @ModelAttribute("amount") String amount, Principal principal) {
+            String accountType, @ModelAttribute("amount") String amount, Principal principal, Model model) {
 
         User user = userService.findByUsername(principal.getName());
         Recipient recipient = transactionService.findRecipientByName(recipientName);
-        transactionService.toSomeoneElseTransfer(recipient, accountType, amount,
-                user.getPrimaryAccount(), user.getSavingsAccount());
+        PrimaryAccount primaryAccount = user.getPrimaryAccount();
+        SavingsAccount savingsAccount = user.getSavingsAccount();
+
+        if (accountType.equalsIgnoreCase("Primary")) {
+            if (primaryAccount.getAccountBalance().compareTo(new BigDecimal(amount)) < 0) {
+                model.addAttribute("wrongTransaction", true);
+                return "toSomeoneElse";
+            } else {transactionService.fromPrimarytoSomeoneElseTransfer(recipient, accountType, amount,
+                    user.getPrimaryAccount(), user.getSavingsAccount());}
+
+        } else if (accountType.equalsIgnoreCase("Savings")) {
+            if (savingsAccount.getAccountBalance().compareTo(new BigDecimal(amount)) < 0) {
+                model.addAttribute("wrongTransaction", true);
+                return "toSomeoneElse";
+            } else {transactionService.fromSavingstoSomeoneElseTransfer(recipient, accountType, amount,
+                    user.getPrimaryAccount(), user.getSavingsAccount());}
+        } else {model.addAttribute("selectRecipient", true);
+            return "toSomeoneElse"; }
+
 
         return "redirect:/userFront";
     }
