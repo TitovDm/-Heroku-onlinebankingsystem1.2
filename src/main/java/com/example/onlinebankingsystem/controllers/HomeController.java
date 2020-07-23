@@ -1,5 +1,6 @@
 package com.example.onlinebankingsystem.controllers;
 
+import com.example.onlinebankingsystem.configs.Utils;
 import com.example.onlinebankingsystem.models.PrimaryAccount;
 import com.example.onlinebankingsystem.models.SavingsAccount;
 import com.example.onlinebankingsystem.models.User;
@@ -25,6 +26,7 @@ public class HomeController {
 
     @Autowired
     RoleRepository roleRepository;
+
 
     @RequestMapping("/")
     public String home() {
@@ -53,6 +55,11 @@ public class HomeController {
             if (userService.checkEmailExists(user.getEmail())) {
                 model.addAttribute("emailExists", true);
             }
+
+            if(!Utils.isValidEmailAddress(user.getEmail())) {
+                model.addAttribute("wrongEmail", true);
+            }
+
 
             if (userService.checkUsernameExists(user.getUsername())) {
                 model.addAttribute("usernameExists", true);

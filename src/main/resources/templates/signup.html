@@ -54,6 +54,8 @@
                 <div class="form-group">
                     <label for="email" class="cols-sm-2 control-label">Your Email</label><span
                         class="bg-danger pull-right" th:if="${emailExists}">Email already exists</span>
+                    <span
+                            class="bg-danger pull-right" th:if="${wrongEmail}">Email is incorrect</span>
                     <div class="cols-sm-10">
                         <div class="input-group">
                             <span class="input-group-addon"><i class="fa fa-envelope fa" aria-hidden="true"></i></span>
